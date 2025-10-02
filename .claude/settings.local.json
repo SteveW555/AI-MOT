@@ -4,7 +4,15 @@
       "Bash(npm install)",
       "Bash(npm run dev:*)",
       "Bash(del index_new.html)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(specify:*)",
+      "SlashCommand(/specify:*)",
+      "Bash(powershell.exe:*)",
+      "WebSearch",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(powershell:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

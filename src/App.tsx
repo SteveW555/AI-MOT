@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { HelpPage } from '@/pages/Help';
+
+type PageState = 'home' | 'help';
 
 const AIMotLanding = () => {
+  const [currentPage, setCurrentPage] = useState<PageState>('home');
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     title: '',
@@ -18,6 +22,21 @@ const AIMotLanding = () => {
   });
 
   const steps = ['Details', 'Date and location', 'Guests'];
+
+  // Update URL when page changes
+  useEffect(() => {
+    const path = currentPage === 'help' ? '/help' : '/';
+    window.history.pushState(null, '', path);
+  }, [currentPage]);
+
+  // Handle browser back/forward
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPage(window.location.pathname === '/help' ? 'help' : 'home');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -141,6 +160,11 @@ const AIMotLanding = () => {
         return null;
     }
   };
+
+  // Show Help page if on help route
+  if (currentPage === 'help') {
+    return <HelpPage onNavigateHome={() => setCurrentPage('home')} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
@@ -453,8 +477,30 @@ const AIMotLanding = () => {
         </div>
       </section>
 
-      {/* Footer spacing */}
-      <div className="h-12"></div>
+      {/* Footer */}
+      <footer className="bg-white/80 backdrop-blur-md border-t-2 border-slate-200 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-slate-600 text-sm">
+              © 2025 AI MOT. All rights reserved.
+            </div>
+            <nav className="flex gap-6">
+              <a href="/about" className="text-slate-600 hover:text-blue-600 transition text-sm">
+                About
+              </a>
+              <a href="/contact" className="text-slate-600 hover:text-blue-600 transition text-sm">
+                Contact
+              </a>
+              <button
+                onClick={() => setCurrentPage('help')}
+                className="text-slate-600 hover:text-blue-600 transition text-sm font-medium"
+              >
+                Help
+              </button>
+            </nav>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
