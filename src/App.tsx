@@ -61,9 +61,10 @@ function AIMotLanding() {
             <header className="bg-transparent border-b border-blue-200/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-slate-900 drop-shadow-sm">AI MOT</h1>
-                    <nav className="flex gap-6">
+                    <nav className="flex gap-6 items-center">
                         <a href="/about" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</a>
                         <a href="/contact" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</a>
+                        <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Under Construction</span>
                     </nav>
                 </div>
             </header>
