@@ -382,7 +382,20 @@ This config only applies to the current project and merges with user-wide settin
 
 ## Claude Code CLI Commands
 
-**IMPORTANT**: Run these commands in the VS Code integrated terminal where Claude Code is active. The `claude` CLI is NOT available in external PowerShell/CMD.
+**CRITICAL**: The `claude` CLI is ONLY available in the VS Code integrated terminal (PowerShell/CMD) where Claude Code extension is active.
+
+❌ **DOES NOT WORK:**
+- External PowerShell windows
+- External CMD windows
+- Git Bash
+- Any terminal outside VS Code
+- Claude Code's internal Bash tool (uses /usr/bin/bash which doesn't have access to `claude`)
+
+✅ **ONLY WORKS:**
+- VS Code integrated terminal (Ctrl + `)
+- Must be in a workspace where Claude Code extension is loaded
+
+**Note for Windows:** VS Code integrated terminal typically uses PowerShell, not bash. All commands in this guide work in PowerShell.
 
 ### Understanding CLI Behavior
 
@@ -392,6 +405,18 @@ These servers will be available in ALL your VS Code projects automatically.
 
 ### Add User-Wide MCP Servers
 
+**CRITICAL: CLI Syntax vs Config File Format**
+
+⚠️ **When using `claude mcp add` command:**
+- Do NOT include `-y` flag in the command
+- The `-y` flag is added automatically by Claude Code internally
+
+**❌ WRONG:**
+```bash
+claude mcp add context7 npx -y @upstash/context7-mcp  # Will fail with "unknown option" error
+```
+
+**✅ CORRECT:**
 ```bash
 # Simple server (no env vars) - becomes available in ALL projects
 claude mcp add context7 npx @upstash/context7-mcp
@@ -399,9 +424,14 @@ claude mcp add context7 npx @upstash/context7-mcp
 # Add with specific path
 claude mcp add filesystem npx @modelcontextprotocol/server-filesystem C:/Users/steve
 
+# Add Chrome DevTools (no API key needed)
+claude mcp add chrome-devtools npx chrome-devtools-mcp@latest
+
 # List all configured servers
 claude mcp list
 ```
+
+**Note:** When Claude Code stores these commands internally in `.claude.json`, it automatically adds the `-y` flag. You'll see this in the config file, but don't include it in the CLI command.
 
 ### Add Project-Specific MCP Servers
 
@@ -915,7 +945,29 @@ claude mcp list
 2. **Claude Code User-Wide**: Only add keyless servers (context7, filesystem)
 3. **Claude Code Project**: Add servers with API keys per project
 4. **Always verify** with `claude mcp list` after configuration changes
-5. **Restart required** after adding MCP servers
+5. **Restart required** after adding MCP servers **OR** changing permissions
+
+### Permissions
+
+**IMPORTANT**: After adding MCP tool permissions to `.claude\settings.local.json`, you MUST restart VS Code for them to take effect.
+
+**Wildcard permissions** (e.g., `"mcp__chrome-devtools__*"`) work but only after restart.
+
+Example permissions in `.claude\settings.local.json`:
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__chrome-devtools__*",
+      "mcp__supabase__*",
+      "mcp__firecrawl__*"
+    ]
+  }
+}
+```
+
+**Without restart**: You'll be asked for permission for each tool individually.
+**After restart**: Wildcard permissions apply automatically.
 
 ---
 
