@@ -11,6 +11,7 @@ interface FormData {
     phoneNumber: string;
 }
 
+
 function AIMotLanding() {
     const [formData, setFormData] = useState<FormData>({
         techSavviness: '',
