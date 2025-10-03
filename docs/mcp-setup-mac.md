@@ -12,17 +12,12 @@
 
 **2\. Claude Code (Anthropic Coding Tool)**
 
-- Config location: `.claude/settings.local.json` (in project root)  
-- CLI tool: `claude mcp` commands  
-- VS Code extension that integrates with Claude  
+- Config locations:
+  - `.mcp.json` (project-scoped, team-sharable, **recommended**)
+  - `.claude/settings.local.json` (permissions and local settings)
+- CLI tool: `claude mcp` commands
+- VS Code extension that integrates with Claude
 - **Use this for coding with MCP**
-
-**3\. VS Code GitHub Copilot (Microsoft's AI)**
-
-- Config location: `.mcp.json` (in project root)  
-- Separate system from Claude  
-- MCP support is incomplete/different  
-- **Don't use this for MCP** \- use Claude Code instead
 
 ---
 
@@ -31,8 +26,8 @@
 | Tool | Config File | Scope |
 | :---- | :---- | :---- |
 | Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` | Global |
-| Claude Code | `.claude/settings.local.json` | Project |
-| VS Code Copilot | `.mcp.json` | Project |
+| Claude Code (Project) | `.mcp.json` | Project (version control) |
+| Claude Code (Local) | `.claude/settings.local.json` | Project (permissions) |
 
 ---
 
@@ -332,17 +327,73 @@ After creating/updating: **Restart Claude Desktop** (Cmd+Q, then reopen)
 
 ---
 
+## Claude Code Project-Scoped MCP Setup (.mcp.json)
+
+### Using .mcp.json (Recommended for Projects)
+
+The `.mcp.json` file is the **recommended** way to configure MCP servers for Claude Code projects. It's designed to be committed to version control and shared with your team.
+
+**Example .mcp.json:**
+
+```json
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/steve"]
+    }
+  }
+}
+```
+
+### Enable Project MCP Servers
+
+Add to `.claude/settings.local.json`:
+
+```json
+{
+  "enableAllProjectMcpServers": true
+}
+```
+
+Or approve specific servers:
+
+```json
+{
+  "enabledMcpjsonServers": ["chrome-devtools", "filesystem"]
+}
+```
+
+---
+
 ## Claude Code CLI Commands
+
+### Add Project-Scoped Server
+
+```bash
+# Add to .mcp.json (team-sharable)
+claude mcp add chrome-devtools --scope project npx -y chrome-devtools-mcp@latest
+
+# Add to user scope (private)
+claude mcp add my-server --scope user npx -y some-package
+
+# Add to local scope (default - private to project + user)
+claude mcp add my-server npx -y some-package
+```
 
 ### Import from Claude Desktop
 
-\# Import all servers
-
+```bash
+# Import all servers
 claude mcp add-from-claude-desktop
 
-\# List imported servers
-
+# List imported servers
 claude mcp list
+```
 
 ### Add Individual Servers
 
@@ -526,12 +577,26 @@ claude mcp get context7
 
 - Store API keys securely  
 - Consider rotating tokens after sharing in chat  
-- Never commit `.claude/settings.local.json` with secrets to git  
-- Add to `.gitignore`:  
-    
-  .claude/settings.local.json  
-    
-  .mcp.json
+- Never commit `.claude/settings.local.json` with secrets to git
+- `.mcp.json` can be committed if it doesn't contain secrets
+- Use environment variables in `.mcp.json` for sensitive data:
+  ```json
+  {
+    "mcpServers": {
+      "api-server": {
+        "type": "sse",
+        "url": "${API_BASE_URL:-https://api.example.com}/mcp",
+        "headers": {
+          "Authorization": "Bearer ${API_KEY}"
+        }
+      }
+    }
+  }
+  ```
+- Add to `.gitignore`:
+  ```
+  .claude/settings.local.json
+  ```
 
 ---
 
@@ -551,10 +616,11 @@ claude mcp get context7
 
 ## Best Practices
 
-1. **Use Claude Desktop as master config** \- Set up all MCP servers there first  
-2. **Import to Claude Code per project** \- Use `claude mcp add-from-claude-desktop`  
-3. **Test in Claude Desktop first** \- Verify servers work before using in Claude Code  
-4. **Keep tokens secure** \- Rotate after sharing or if compromised  
-5. **Use Claude Code for coding** \- Don't rely on VS Code Copilot for MCP  
-6. **Document your setup** \- Keep notes on which services need which credentials  
-7. **Always restart Claude** \- After adding/removing MCP servers, restart Claude Code or VS Code
+1. **Use `.mcp.json` for team projects** - Commit project-scoped MCP configs to version control
+2. **Use environment variables** - Keep secrets out of `.mcp.json` using `${VAR_NAME}` syntax
+3. **Enable project MCP servers** - Set `"enableAllProjectMcpServers": true` in `.claude/settings.local.json`
+4. **Claude Desktop for personal use** - Keep global MCP servers in `~/Library/Application Support/Claude/claude_desktop_config.json`
+5. **Test in Claude Desktop first** - Verify servers work before using in Claude Code
+6. **Keep tokens secure** - Rotate after sharing or if compromised
+7. **Document your setup** - Keep notes on which services need which credentials
+8. **Always restart Claude** - After adding/removing MCP servers, restart Claude Code or VS Code
