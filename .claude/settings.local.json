@@ -55,7 +55,14 @@
       "mcp__chrome-devtools__puppeteer_fill",
       "mcp__chrome-devtools__puppeteer_select",
       "mcp__chrome-devtools__puppeteer_hover",
-      "mcp__chrome-devtools__puppeteer_evaluate"
+      "mcp__chrome-devtools__puppeteer_evaluate",
+      "mcp__github__*",
+      "mcp__firecrawl__firecrawl_scrape",
+      "mcp__firecrawl__firecrawl_map",
+      "mcp__firecrawl__firecrawl_search",
+      "mcp__firecrawl__firecrawl_crawl",
+      "mcp__firecrawl__firecrawl_check_crawl_status",
+      "mcp__firecrawl__firecrawl_extract"
     ],
     "deny": [],
     "ask": []
