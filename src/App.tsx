@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PricingModal from './components/PricingModal';
 
 interface FormData {
     techSavviness: string;
@@ -22,6 +23,8 @@ function AIMotLanding() {
         email: '',
         phoneNumber: ''
     });
+
+    const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -65,6 +68,7 @@ function AIMotLanding() {
                     <nav className="flex gap-6 items-center">
                         <a href="/about" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</a>
                         <a href="/contact" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</a>
+                        <button type="button" onClick={() => setIsPricingModalOpen(true)} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">PRICING</button>
                         <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Under Construction</span>
                     </nav>
                 </div>
@@ -356,6 +360,11 @@ function AIMotLanding() {
 
             {/* Footer spacing */}
             <div className="h-12"></div>
+
+            <PricingModal
+                open={isPricingModalOpen}
+                onClose={() => setIsPricingModalOpen(false)}
+            />
         </div>
     );
 }

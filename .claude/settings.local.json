@@ -1,5 +1,4 @@
 {
-  "enableAllProjectMcpServers": true,
   "permissions": {
     "allow": [
       "Bash(npm install)",
@@ -62,9 +61,11 @@
       "mcp__firecrawl__firecrawl_search",
       "mcp__firecrawl__firecrawl_crawl",
       "mcp__firecrawl__firecrawl_check_crawl_status",
-      "mcp__firecrawl__firecrawl_extract"
+      "mcp__firecrawl__firecrawl_extract",
+      "Bash(git clone:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true
 }
