@@ -1,1 +1,1 @@
-Fill in the form with random values, email shouyld be ericwarruk"gmail.com and phone number: +44 7377 669617
+Use Chrome devtools mcp to Fill in the form with random values, email shouyld be ericwarruk"gmail.com and phone number: +44 7377 669617
