@@ -60,8 +60,11 @@ function AIMotLanding() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
             {/* Header */}
             <header className="bg-transparent border-b border-blue-200/50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-slate-900 drop-shadow-sm">AI MOT</h1>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex justify-between items-center">
+                    <div className="relative h-14">
+                        <img src="/ai-mot-logo.svg?v=6" alt="AI MOT" className="h-14" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 mix-blend-color" style={{WebkitMaskImage: 'url(/ai-mot-logo.svg?v=6)', WebkitMaskSize: 'contain', WebkitMaskRepeat: 'no-repeat', maskImage: 'url(/ai-mot-logo.svg?v=6)', maskSize: 'contain', maskRepeat: 'no-repeat'}}></div>
+                    </div>
                     <nav className="flex gap-6 items-center">
                         <a href="/about" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</a>
                         <a href="/contact" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</a>
@@ -78,7 +81,7 @@ function AIMotLanding() {
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight text-black/80 drop-shadow-md mb-4 text-balance">
-                        <span className="font-bold block">BOOK YOUR AI MOT TODAY</span> <span className="text-2xl md:text-3xl lg:text-4xl font-normal block mt-2">Secure a one-on-one diagnostic with our AI engineer and receive the exact blueprint needed to build your custom automation system.</span>
+                        <span className="font-bold block">BOOK YOUR AI MOT TODAY</span> <span className="text-lg font-normal block mt-2">Secure a one-on-one diagnostic with our AI engineers to gain crucial insights into your systems and receive the definitive roadmap for your custom automations.</span>
                     </h2>
                 </div>
             </section>
