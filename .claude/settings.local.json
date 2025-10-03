@@ -62,7 +62,10 @@
       "mcp__firecrawl__firecrawl_crawl",
       "mcp__firecrawl__firecrawl_check_crawl_status",
       "mcp__firecrawl__firecrawl_extract",
-      "Bash(git clone:*)"
+      "Bash(git clone:*)",
+      "mcp__filesystem__list_directory",
+      "Bash(type $PROFILE)",
+      "Bash(Test-Path $PROFILE)"
     ],
     "deny": [],
     "ask": []

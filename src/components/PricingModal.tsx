@@ -9,6 +9,20 @@ interface PricingModalProps {
 const PricingModal: React.FC<PricingModalProps> = ({ open, onClose }) => {
   const pricingTiers = [
     {
+      name: 'Free',
+      tagline: 'Try before you commit',
+      price: '$0/month',
+      features: [
+        'AI overview consultation (30 min)',
+        'Community support',
+        'Basic documentation',
+        'Monthly newsletter',
+        'Access to webinars'
+      ],
+      cta: 'Get Started',
+      isPopular: false
+    },
+    {
       name: 'Basic',
       tagline: 'Perfect for individuals getting started',
       price: '$49/month',
@@ -58,7 +72,7 @@ const PricingModal: React.FC<PricingModalProps> = ({ open, onClose }) => {
 
   return (
     <Modal open={open} onClose={onClose} title="Pricing Plans">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {pricingTiers.map((tier) => (
           <div
             key={tier.name}

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import PricingModal from './components/PricingModal';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 interface FormData {
     techSavviness: string;
@@ -25,6 +27,7 @@ function AIMotLanding() {
     });
 
     const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'contact'>('home');
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -59,15 +62,65 @@ function AIMotLanding() {
     };
 
 
+    if (currentPage === 'about') {
+        return (
+            <>
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+                    <header className="bg-transparent border-b border-blue-200/50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                            <button onClick={() => setCurrentPage('home')} className="text-2xl font-bold text-slate-900 drop-shadow-sm hover:text-blue-600 transition">AI MOT</button>
+                            <nav className="flex gap-6 items-center">
+                                <button onClick={() => setCurrentPage('about')} className="text-sm font-bold text-blue-600 transition drop-shadow-sm">ABOUT</button>
+                                <button onClick={() => setCurrentPage('contact')} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</button>
+                                <button type="button" onClick={() => setIsPricingModalOpen(true)} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">PRICING</button>
+                                <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Under Construction</span>
+                            </nav>
+                        </div>
+                    </header>
+                    <About />
+                </div>
+                <PricingModal
+                    open={isPricingModalOpen}
+                    onClose={() => setIsPricingModalOpen(false)}
+                />
+            </>
+        );
+    }
+
+    if (currentPage === 'contact') {
+        return (
+            <>
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+                    <header className="bg-transparent border-b border-blue-200/50">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                            <button onClick={() => setCurrentPage('home')} className="text-2xl font-bold text-slate-900 drop-shadow-sm hover:text-blue-600 transition">AI MOT</button>
+                            <nav className="flex gap-6 items-center">
+                                <button onClick={() => setCurrentPage('about')} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</button>
+                                <button onClick={() => setCurrentPage('contact')} className="text-sm font-bold text-blue-600 transition drop-shadow-sm">CONTACT</button>
+                                <button type="button" onClick={() => setIsPricingModalOpen(true)} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">PRICING</button>
+                                <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Under Construction</span>
+                            </nav>
+                        </div>
+                    </header>
+                    <Contact />
+                </div>
+                <PricingModal
+                    open={isPricingModalOpen}
+                    onClose={() => setIsPricingModalOpen(false)}
+                />
+            </>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
             {/* Header */}
             <header className="bg-transparent border-b border-blue-200/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-slate-900 drop-shadow-sm">AI MOT</h1>
+                    <button onClick={() => setCurrentPage('home')} className="text-2xl font-bold text-slate-900 drop-shadow-sm hover:text-blue-600 transition">AI MOT</button>
                     <nav className="flex gap-6 items-center">
-                        <a href="/about" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</a>
-                        <a href="/contact" className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</a>
+                        <button onClick={() => setCurrentPage('about')} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</button>
+                        <button onClick={() => setCurrentPage('contact')} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</button>
                         <button type="button" onClick={() => setIsPricingModalOpen(true)} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">PRICING</button>
                         <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Under Construction</span>
                     </nav>

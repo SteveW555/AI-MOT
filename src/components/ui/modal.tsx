@@ -107,7 +107,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           className={cn(
             'bg-gradient-to-r from-[rgb(179,223,255)] via-[rgb(221,208,255)] to-[rgb(253,230,244)]',
             'p-[4px] rounded-lg shadow-2xl',
-            'max-w-2xl w-full',
+            'max-w-7xl w-full',
             'transition-all duration-300',
             isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
             className
