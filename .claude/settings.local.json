@@ -12,7 +12,8 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(powershell:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
