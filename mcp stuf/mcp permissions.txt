@@ -1,0 +1,1 @@
+set mcp permissions in .claude/settings.local.json

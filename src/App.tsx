@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PricingModal from './components/PricingModal';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -6,7 +6,7 @@ import Contact from './pages/Contact';
 interface FormData {
     techSavviness: string;
     usesAI: string;
-    aiSoftware: string;
+    aiSoftware: string[];
     challenge: string;
     contactMethod: string;
     name: string;
@@ -18,7 +18,7 @@ function AIMotLanding() {
     const [formData, setFormData] = useState<FormData>({
         techSavviness: '',
         usesAI: '',
-        aiSoftware: '',
+        aiSoftware: [],
         challenge: '',
         contactMethod: '',
         name: '',
@@ -28,9 +28,39 @@ function AIMotLanding() {
 
     const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'contact'>('home');
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [isDarkMode]);
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleAiSoftwareToggle = (software: string) => {
+        setFormData(prev => {
+            // If "none" is clicked, clear all selections and set only "none"
+            if (software === 'none') {
+                return { ...prev, aiSoftware: ['none'] };
+            }
+
+            // If any other option is clicked and "none" is currently selected, remove "none"
+            let newSoftware = prev.aiSoftware.filter(s => s !== 'none');
+
+            // Toggle the clicked software
+            if (newSoftware.includes(software)) {
+                newSoftware = newSoftware.filter(s => s !== software);
+            } else {
+                newSoftware = [...newSoftware, software];
+            }
+
+            return { ...prev, aiSoftware: newSoftware };
+        });
     };
 
     const handleSubmit = () => {
@@ -39,7 +69,7 @@ function AIMotLanding() {
         setFormData({
             techSavviness: '',
             usesAI: '',
-            aiSoftware: '',
+            aiSoftware: [],
             challenge: '',
             contactMethod: '',
             name: '',
@@ -52,7 +82,7 @@ function AIMotLanding() {
         setFormData({
             techSavviness: '',
             usesAI: '',
-            aiSoftware: '',
+            aiSoftware: [],
             challenge: '',
             contactMethod: '',
             name: '',
@@ -113,16 +143,38 @@ function AIMotLanding() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
             {/* Header */}
-            <header className="bg-transparent border-b border-blue-200/50">
+            <header className="bg-transparent border-b border-blue-200/50 dark:border-slate-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                    <button onClick={() => setCurrentPage('home')} className="text-2xl font-bold text-slate-900 drop-shadow-sm hover:text-blue-600 transition">AI MOT</button>
+                    <button onClick={() => setCurrentPage('home')} className="text-2xl font-bold text-slate-900 dark:text-slate-100 drop-shadow-sm hover:text-blue-600 dark:hover:text-blue-400 transition">AI MOT</button>
                     <nav className="flex gap-6 items-center">
-                        <button onClick={() => setCurrentPage('about')} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">ABOUT</button>
-                        <button onClick={() => setCurrentPage('contact')} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">CONTACT</button>
-                        <button type="button" onClick={() => setIsPricingModalOpen(true)} className="text-sm font-bold text-slate-700 hover:text-blue-600 transition drop-shadow-sm">PRICING</button>
+                        <button onClick={() => setCurrentPage('about')} className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition drop-shadow-sm">ABOUT</button>
+                        <button onClick={() => setCurrentPage('contact')} className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition drop-shadow-sm">CONTACT</button>
+                        <button type="button" onClick={() => setIsPricingModalOpen(true)} className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition drop-shadow-sm">PRICING</button>
                         <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Under Construction</span>
+
+                        {/* Theme Toggle */}
+                        <div className="flex gap-2 ml-2 border-l border-slate-300 dark:border-slate-600 pl-4">
+                            <button
+                                onClick={() => setIsDarkMode(false)}
+                                className={`p-2 rounded-lg transition-all ${!isDarkMode ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                                aria-label="Light mode"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={() => setIsDarkMode(true)}
+                                className={`p-2 rounded-lg transition-all ${isDarkMode ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                                aria-label="Dark mode"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                            </button>
+                        </div>
                     </nav>
                 </div>
             </header>
@@ -134,7 +186,7 @@ function AIMotLanding() {
             {/* Hero Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight text-black/80 drop-shadow-md mb-4 text-balance">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight text-black/80 dark:text-white/90 drop-shadow-md mb-4 text-balance">
                         <span className="font-bold block">BOOK YOUR AI MOT TODAY</span> <span className="text-2xl md:text-3xl lg:text-4xl font-normal block mt-2">Secure a one-on-one diagnostic with our AI engineer and receive the exact blueprint needed to build your custom automation system.</span>
                     </h2>
                 </div>
@@ -144,9 +196,9 @@ function AIMotLanding() {
             {/* Video Placeholder Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-8 pb-4">
                 <div className="max-w-3xl mx-auto">
-                    <div className="bg-gradient-to-r from-[rgb(179,223,255)] via-[rgb(221,208,255)] to-[rgb(253,230,244)] rounded-lg p-[4px] shadow-xl">
-                        <div className="aspect-video bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-lg flex items-center justify-center">
-                            <p className="text-slate-400 text-lg">Video Placeholder</p>
+                    <div className="bg-gradient-to-r from-[rgb(179,223,255)] via-[rgb(221,208,255)] to-[rgb(253,230,244)] dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded-lg p-[4px] shadow-xl">
+                        <div className="aspect-video bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-800 rounded-lg flex items-center justify-center">
+                            <p className="text-slate-400 dark:text-slate-500 text-lg">Video Placeholder</p>
                         </div>
                     </div>
                 </div>
@@ -154,17 +206,17 @@ function AIMotLanding() {
             {/* Gap Control: pt-10 controls the spacing between the Video and the Form */}
             {/* Form Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-10 md:pb-16 relative">
-                <div className="absolute top-20 left-10 w-64 h-64 bg-blue-300 rounded-full blur-3xl opacity-30"></div>
-                <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-300 rounded-full blur-3xl opacity-30"></div>
+                <div className="absolute top-20 left-10 w-64 h-64 bg-blue-300 dark:bg-blue-900 rounded-full blur-3xl opacity-30 dark:opacity-20"></div>
+                <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-300 dark:bg-pink-900 rounded-full blur-3xl opacity-30 dark:opacity-20"></div>
 
                 <div className="max-w-3xl mx-auto relative z-10">
-                    <div className="bg-gradient-to-r from-[rgb(179,223,255)] via-[rgb(221,208,255)] to-[rgb(253,230,244)] rounded-lg p-[4px] shadow-2xl">
-                        <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-lg p-8">
+                    <div className="bg-gradient-to-r from-[rgb(179,223,255)] via-[rgb(221,208,255)] to-[rgb(253,230,244)] dark:from-slate-700 dark:via-slate-600 dark:to-slate-700 rounded-lg p-[4px] shadow-2xl">
+                        <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-slate-800 dark:via-slate-800 dark:to-slate-900 rounded-lg p-8">
                             {/* All questions displayed vertically */}
                             <div className="space-y-8">
                                 {/* Question 1 */}
                                 <div>
-                                    <label className="block text-lg font-medium mb-3">
+                                    <label className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         Do you currently use A.I?
                                     </label>
                                     <div className="flex gap-4">
@@ -172,8 +224,8 @@ function AIMotLanding() {
                                             type="button"
                                             onClick={() => handleInputChange('usesAI', 'yes')}
                                             className={`flex-1 px-6 py-3 rounded-md border-2 transition-all text-base ${formData.usesAI === 'yes'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 dark:text-slate-300'
                                                 }`}
                                         >
                                             Yes
@@ -182,8 +234,8 @@ function AIMotLanding() {
                                             type="button"
                                             onClick={() => handleInputChange('usesAI', 'no')}
                                             className={`flex-1 px-6 py-3 rounded-md border-2 transition-all text-base ${formData.usesAI === 'no'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 dark:text-slate-300'
                                                 }`}
                                         >
                                             No
@@ -193,66 +245,66 @@ function AIMotLanding() {
 
                                 {/* Question 2 */}
                                 <div>
-                                    <label className="block text-lg font-medium mb-3">
-                                        Do you use any of the following AI software?
+                                    <label className="block text-lg font-medium mb-3 dark:text-slate-200">
+                                        Do you use any of the following AI Services? (Select all that apply)
                                     </label>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                         <button
                                             type="button"
-                                            onClick={() => handleInputChange('aiSoftware', 'gemini')}
-                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.aiSoftware === 'gemini'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                            onClick={() => handleAiSoftwareToggle('gemini')}
+                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base dark:text-slate-300 ${formData.aiSoftware.includes('gemini')
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             Gemini
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => handleInputChange('aiSoftware', 'chatgpt')}
-                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.aiSoftware === 'chatgpt'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                            onClick={() => handleAiSoftwareToggle('chatgpt')}
+                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base dark:text-slate-300 ${formData.aiSoftware.includes('chatgpt')
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             ChatGPT
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => handleInputChange('aiSoftware', 'claude')}
-                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.aiSoftware === 'claude'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                            onClick={() => handleAiSoftwareToggle('claude')}
+                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base dark:text-slate-300 ${formData.aiSoftware.includes('claude')
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             Claude
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => handleInputChange('aiSoftware', 'n8n')}
-                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.aiSoftware === 'n8n'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                            onClick={() => handleAiSoftwareToggle('n8n')}
+                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base dark:text-slate-300 ${formData.aiSoftware.includes('n8n')
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             n8n
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => handleInputChange('aiSoftware', 'multiple')}
-                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.aiSoftware === 'multiple'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                            onClick={() => handleAiSoftwareToggle('other')}
+                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base dark:text-slate-300 ${formData.aiSoftware.includes('other')
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
-                                            Multiple
+                                            Other
                                         </button>
                                         <button
                                             type="button"
-                                            onClick={() => handleInputChange('aiSoftware', 'none')}
-                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.aiSoftware === 'none'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                            onClick={() => handleAiSoftwareToggle('none')}
+                                            className={`px-4 py-3 rounded-md border-2 transition-all text-base dark:text-slate-300 ${formData.aiSoftware.includes('none')
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             None
@@ -262,7 +314,7 @@ function AIMotLanding() {
 
                                 {/* Question 3 */}
                                 <div>
-                                    <label htmlFor="challenge" className="block text-lg font-medium mb-3">
+                                    <label htmlFor="challenge" className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         What is the primary challenge you are hoping to solve with AI consulting?
                                     </label>
                                     <textarea
@@ -276,7 +328,7 @@ function AIMotLanding() {
 
                                 {/* Question 4 */}
                                 <div>
-                                    <label className="block text-lg font-medium mb-3">
+                                    <label className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         On a scale of 1 to 10, how tech savvy are you?
                                     </label>
                                     <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
@@ -286,8 +338,8 @@ function AIMotLanding() {
                                                 type="button"
                                                 onClick={() => handleInputChange('techSavviness', num.toString())}
                                                 className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.techSavviness === num.toString()
-                                                    ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                    : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                    ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                    : 'border-gray-300 dark:border-slate-600 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                     }`}
                                             >
                                                 {num}
@@ -298,7 +350,7 @@ function AIMotLanding() {
 
                                 {/* Question 5 */}
                                 <div>
-                                    <label className="block text-lg font-medium mb-3">
+                                    <label className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         What is your preferred method for the one-to-one consultation session?
                                     </label>
                                     <div className="grid grid-cols-2 gap-3">
@@ -306,8 +358,8 @@ function AIMotLanding() {
                                             type="button"
                                             onClick={() => handleInputChange('contactMethod', 'video-call')}
                                             className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.contactMethod === 'video-call'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             Video Call
@@ -316,8 +368,8 @@ function AIMotLanding() {
                                             type="button"
                                             onClick={() => handleInputChange('contactMethod', 'phone-call')}
                                             className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.contactMethod === 'phone-call'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             Phone Call
@@ -326,8 +378,8 @@ function AIMotLanding() {
                                             type="button"
                                             onClick={() => handleInputChange('contactMethod', 'email')}
                                             className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.contactMethod === 'email'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             Email
@@ -336,8 +388,8 @@ function AIMotLanding() {
                                             type="button"
                                             onClick={() => handleInputChange('contactMethod', 'message')}
                                             className={`px-4 py-3 rounded-md border-2 transition-all text-base ${formData.contactMethod === 'message'
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700 font-medium'
-                                                : 'border-gray-300 hover:border-blue-300 hover:bg-blue-50'
+                                                ? 'border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-900/50 dark:text-blue-300 font-medium'
+                                                : 'border-gray-300 dark:border-slate-600 dark:text-slate-300 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
                                                 }`}
                                         >
                                             Message
@@ -347,7 +399,7 @@ function AIMotLanding() {
 
                                 {/* Question 6 */}
                                 <div>
-                                    <label htmlFor="name" className="block text-lg font-medium mb-3">
+                                    <label htmlFor="name" className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         Name
                                     </label>
                                     <input
@@ -362,7 +414,7 @@ function AIMotLanding() {
 
                                 {/* Question 7 */}
                                 <div>
-                                    <label htmlFor="email" className="block text-lg font-medium mb-3">
+                                    <label htmlFor="email" className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         Email
                                     </label>
                                     <input
@@ -377,7 +429,7 @@ function AIMotLanding() {
 
                                 {/* Question 8 */}
                                 <div>
-                                    <label htmlFor="phoneNumber" className="block text-lg font-medium mb-3">
+                                    <label htmlFor="phoneNumber" className="block text-lg font-medium mb-3 dark:text-slate-200">
                                         Phone Number
                                     </label>
                                     <input
@@ -395,7 +447,7 @@ function AIMotLanding() {
                             <div className="flex justify-end gap-3 mt-8">
                                 <button
                                     onClick={handleCancel}
-                                    className="px-6 py-3 border border-gray-300 rounded-md hover:bg-slate-50 transition text-base"
+                                    className="px-6 py-3 border border-gray-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition text-base dark:text-slate-200"
                                 >
                                     Cancel
                                 </button>

@@ -1,0 +1,41 @@
+{
+	"servers": {
+		"markitdown": {
+			"command": "uvx",
+			"args": [
+				"markitdown-mcp"
+			],
+			"type": "stdio"
+		},
+		"asana": {
+			"url": "https://mcp.asana.com/sse",
+			"type": "http"
+		},
+		"coplaydev/unity-mcp": {
+			"type": "stdio",
+			"command": "uv",
+			"args": [
+				"--directory",
+				"${input:unity_mcp_server_src}",
+				"run",
+				"server.py"
+			],
+			"gallery": "https://api.mcp.github.com/v0/servers/776e74ed-3a5a-4642-8710-13ee91ed1c10",
+			"version": "1.0.0"
+		},
+		"evalstate/hf-mcp-server": {
+			"type": "http",
+			"url": "https://huggingface.co/mcp?login",
+			"gallery": "https://api.mcp.github.com/v0/servers/1094d85c-b89b-4a7b-a4da-74718f67d839",
+			"version": "1.0.0"
+		}
+	},
+	"inputs": [
+		{
+			"id": "unity_mcp_server_src",
+			"type": "promptString",
+			"description": "~/Library/Application Support/UnityMCP/UnityMcpServer/src",
+			"password": false
+		}
+	]
+}
