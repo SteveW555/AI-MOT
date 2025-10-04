@@ -350,7 +350,7 @@ The `.mcp.json` file is the **recommended** way to configure MCP servers for Cla
 }
 ```
 
-### Enable Project MCP Servers
+### Enable (Not Add) Project MCP Servers
 
 Add to `.claude/settings.local.json`:
 
